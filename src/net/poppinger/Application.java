@@ -46,9 +46,36 @@ public class Application {
     }
 
     public void main(String[] args) {
-        System.out.println("Hello world!");
+        System.out.println("Hello minesweeper");
+        if (args.length>0){
+            try{
+                maxCols=Integer.parseInt(args[0]);
+            }
+            catch (Exception e){
+                System.out.println("MaxRows not parseable!");
+            }
+        }
+        if (args.length>1){
+            try{
+                maxRows=Integer.parseInt(args[1]);
+            }
+            catch (Exception e){
+                System.out.println("MaxCols is not parseable!");
+            }
+        }
+        int bombscount=15;
+        if (args.length>2){
+            try{
+                bombscount=Integer.parseInt(args[2]);
+                if (bombscount<10) bombscount=10;
+                if (bombscount>(maxCols*maxRows)) bombscount=maxCols*maxRows;
+            }
+            catch (Exception e){
+                System.out.println("MaxCols is not parseable!");
+            }
+        }
         init();
-        initBombs(15);
+        initBombs(bombscount);
         setBombCount();
         //board[0][0].marker= TileStatus.Marker.Free;
         //board[0][1].marker= TileStatus.Marker.BOMB;
@@ -263,16 +290,16 @@ public class Application {
     public void printBoard(boolean showBombs){
         // Print headline
         System.out.print(" ");
-        for(int y=0;y<maxRows;y++){
-            if (y<10) {
-                System.out.print("  " + (y + 1) + "");
+        for(int x=0;x<maxCols;x++){
+            if (x<10) {
+                System.out.print("  " + (x + 1) + "");
             }
             else {
-                System.out.print(" " + (y + 1));
+                System.out.print(" " + (x + 1));
             }
         }
         System.out.println();
-        for(int y=0;y<maxCols;y++){
+        for(int y=0;y<maxRows;y++){
             // print rownumber
             if ((y+1)<10){
                 System.out.print((y+1)+" ");
@@ -280,7 +307,7 @@ public class Application {
             else {
                 System.out.print(y+1);
             }
-            for(int x=0;x<maxRows;x++){
+            for(int x=0;x<maxCols;x++){
                 System.out.print("|");
                 switch (board[x][y].marker){
                     case NOT_MARKED -> System.out.print(" ");

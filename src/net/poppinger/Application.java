@@ -1,14 +1,30 @@
 package net.poppinger;
 
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 class Coord{
+    public Coord(){
+
+    }
+    public Coord(int x, int y){
+        this.x=x;
+        this.y=y;
+    }
     int x;
     int y;
 }
 
 public class Application {
+
+    private enum GameStatus{
+        INPUT_ERROR,
+        INPUT_OK,
+        PLAYER_LOST
+    }
+
 
     int maxRows=10;
     int maxCols=10;
@@ -33,6 +49,7 @@ public class Application {
         System.out.println("Hello world!");
         init();
         initBombs(15);
+        setBombCount();
         //board[0][0].marker= TileStatus.Marker.Free;
         //board[0][1].marker= TileStatus.Marker.BOMB;
         //board[0][1].status= TileStatus.Status.BOMB;
@@ -43,11 +60,18 @@ public class Application {
         do{
             printBoard(false);
             command=readCommand(scanner);
-            commandAuswerten(command);
+            GameStatus result=commandAuswerten(command);
+
+            if (result.equals(GameStatus.PLAYER_LOST)){
+                command="q";
+                System.out.println("Sie haben verloren!");
+                printBoard(true);
+            }
+
 
         }while (!command.equals("q"));
 
-        System.out.println("Danke sehr fürs mitspielen");
+        System.out.println("Danke sehr fürs Mitspielen");
 
 
     }
@@ -62,6 +86,34 @@ public class Application {
             }
             else {
                 nr--;
+            }
+        }
+    }
+
+    private int getBombCount(int x, int y){
+        if (x<0 || y<0) return 0;
+        if (x>=maxCols) return 0;
+        if (y>=maxRows) return 0;
+
+        if (board[x][y].status.equals(TileStatus.Status.BOMB)) return 1;
+
+        return 0;
+    }
+
+    private void setBombCount(){
+        for(int y=0;y<maxRows;y++){
+            for(int x=0;x<maxCols;x++){
+                int bc=0;
+                bc+=getBombCount(x,y-1);
+                bc+=getBombCount(x+1,y-1);
+                bc+=getBombCount(x+1,y);
+                bc+=getBombCount(x+1,y+1);
+                bc+=getBombCount(x,y+1);
+                bc+=getBombCount(x-1,y+1);
+                bc+=getBombCount(x-1,y);
+                bc+=getBombCount(x-1,y-1);
+
+                board[x][y].bombCount=bc;
             }
         }
     }
@@ -104,14 +156,45 @@ public class Application {
         }
     }
 
+
+    private void revealNeighbours(int x, int y, List<Coord> visited){
+
+        if (x<0 || y<0) return;
+        if (x>=maxCols || y>=maxRows) return;
+
+        // check if we already visited this
+        for (var coord: visited ) {
+            if (coord.x==x && coord.y==y) return;
+        }
+        visited.add(new Coord(x,y));
+
+        board[x][y].revealed=true;
+        if (board[x][y].bombCount>0){
+            board[x][y].showBombCount=true;
+            return;
+        }
+
+        // Bombcount==0 so we can check our neighbours
+        revealNeighbours(x,y-1,visited);
+        revealNeighbours(x+1,y-1,visited);
+        revealNeighbours(x+1,y,visited);
+        revealNeighbours(x+1,y+1,visited);
+        revealNeighbours(x,y+1,visited);
+        revealNeighbours(x-1,y+1,visited);
+        revealNeighbours(x-1,y,visited);
+        revealNeighbours(x-1,y-1,visited);
+
+    }
+
+
     /**
      *
      * @param command
      * @return boolean true if success
      */
-    private boolean commandAuswerten(String command){
+    private GameStatus commandAuswerten(String command){
 
-        if (command==null) return false;
+        if (command==null) return GameStatus.INPUT_ERROR;
 
         if (command.equals("?")){
             System.out.println(
@@ -122,27 +205,27 @@ public class Application {
                     "MK x,y .... Markierung löschen x-Koordinate,yKoordinate\n" +
                     "A x,y ..... Aufdecken x-Koordinate,yKoordinate\n" +
                     "q ......... Quit");
-            return true;
+            return GameStatus.INPUT_OK;
         }
         else if (command.startsWith("MB")){
             // parse Coordinates
             var coords = new Coord();
             if (!parseCoordinates(command,coords)){
                 System.out.println("Falsche Eingabe");
-                return false;
+                return GameStatus.INPUT_ERROR;
             }
             board[coords.x][coords.y].marker= TileStatus.Marker.BOMB;
-            return true;
+            return GameStatus.INPUT_OK;
         }
         else if (command.startsWith("MF")){
             // parse Coordinates
             var coords = new Coord();
             if (!parseCoordinates(command,coords)){
                 System.out.println("Falsche Eingabe");
-                return false;
+                return GameStatus.INPUT_ERROR;
             }
             board[coords.x][coords.y].marker= TileStatus.Marker.Free;
-            return true;
+            return GameStatus.INPUT_OK;
 
         }
         else if (command.startsWith("MK")){
@@ -150,24 +233,31 @@ public class Application {
             var coords = new Coord();
             if (!parseCoordinates(command,coords)){
                 System.out.println("Falsche Eingabe");
-                return false;
+                return GameStatus.INPUT_ERROR;
             }
             board[coords.x][coords.y].marker= TileStatus.Marker.NOT_MARKED;
-            return true;
+            return GameStatus.INPUT_OK;
         }
         else if (command.startsWith("A")){
             // parse Coordinates
             var coords = new Coord();
             if (!parseCoordinates(command,coords)){
                 System.out.println("Falsche Eingabe");
-                return false;
+                return GameStatus.INPUT_ERROR;
             }
-            System.out.println("not Implemented yet.....");
-            return false;
+            if (board[coords.x][coords.y].status.equals(TileStatus.Status.BOMB)){
+                // Verloren
+                return GameStatus.PLAYER_LOST;
+            }
+
+            board[coords.x][coords.y].revealed=true;
+            revealNeighbours(coords.x,coords.y,new ArrayList<>());
+
+            return GameStatus.INPUT_OK;
         }
 
         System.out.println("Unbekannter Befehl!");
-        return false;
+        return GameStatus.INPUT_ERROR;
     }
 
     public void printBoard(boolean showBombs){
@@ -201,7 +291,18 @@ public class Application {
                     System.out.print("B");
                 }
                 else {
-                    System.out.print(" ");
+                    if (board[x][y].showBombCount) {
+                        System.out.print(board[x][y].bombCount);
+                    }
+                    else {
+                        if (board[x][y].revealed) {
+                            System.out.print(" ");
+                        }
+                        else
+                        {
+                            System.out.print("X");
+                        }
+                    }
                 }
             }
             System.out.println("|");

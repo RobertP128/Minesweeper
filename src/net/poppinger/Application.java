@@ -53,7 +53,7 @@ public class Application {
         //board[0][0].marker= TileStatus.Marker.Free;
         //board[0][1].marker= TileStatus.Marker.BOMB;
         //board[0][1].status= TileStatus.Status.BOMB;
-        printBoard(true);
+        //printBoard(true);
 
         String command;
         Scanner scanner=new Scanner(System.in);

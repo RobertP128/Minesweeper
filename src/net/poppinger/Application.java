@@ -26,13 +26,13 @@ public class Application {
     }
 
 
-    int maxRows=10;
-    int maxCols=10;
-    TileStatus[][] board;
+    public int maxRows=10;
+    public int maxCols=10;
+    public TileStatus[][] board;
 
 
 
-    private void init(){
+    public void init(){
         board=new TileStatus[maxCols][maxRows];
 
         for(int x=0;x<maxCols;x++){
@@ -104,7 +104,7 @@ public class Application {
     }
 
 
-    private void initBombs(int numBombs){
+    public void initBombs(int numBombs){
         for (int nr=0;nr<numBombs;nr++){
             int x=(int)(Math.random()*maxCols);
             int y=(int)(Math.random()*maxRows);
@@ -127,7 +127,7 @@ public class Application {
         return 0;
     }
 
-    private void setBombCount(){
+    public void setBombCount(){
         for(int y=0;y<maxRows;y++){
             for(int x=0;x<maxCols;x++){
                 int bc=0;

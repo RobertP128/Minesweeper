@@ -17,9 +17,9 @@ public class View {
             out.println("<h1>" + "Spieler hat verloren" + "</h1>");
         }
         out.println("<table border=\"0\" cellspacing=\"0\">");
-        for (int y=0;y<board.length;y++){
+        for (int y=0;y<board[0].length;y++){
             out.println("<tr>");
-            for(int x=0;x<board[y].length;x++){
+            for(int x=0;x<board.length;x++){
                 String className="field_";
                 if (!board[x][y].revealed) {
                     switch (board[x][y].marker) {

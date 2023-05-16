@@ -10,8 +10,8 @@ public class MainController {
 
     public void InitBoard(){
         app=new Application();
-        app.maxCols=50;
-        app.maxRows=40;
+        app.maxCols=80;
+        app.maxRows=30;
         app.init();
         app.initBombs(150);
         app.setBombCount();

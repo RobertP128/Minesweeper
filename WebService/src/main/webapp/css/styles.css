@@ -1,11 +1,11 @@
 
 a,a:hover,a:visited{
     text-decoration: none;
-    font-size: 10px;
+    font-size: 20px;
     display:block;
 }
 body{
-    font-size: 10px;
+    font-size: 20px;
 }
 
 table{
@@ -14,16 +14,20 @@ table{
 }
 
 td {
-    width: 10px;
-    height: 10px;
+    width: 20px;
+    height: 20px;
     border: 1px solid grey;
 }
+td[class*="field_"]{
+    background-size: contain;
+}
 
-.field____{}
-
+.field____{
+  background: url("../bilder/leer.png");
+}
 
 .field___X{
-    background-color: grey;
+    background: url("../bilder/smile.png");
 }
 .field_f_X{
     background-color: aqua;
@@ -34,21 +38,25 @@ td {
 
 
 .field___1{
-    background-color: red;
+    background: url("../bilder/1.png");
+
 }
 .field___2{
-    background-color: green;
+        background: url("../bilder/2.png");
 }
 .field___3{
-    background-color: black;
+    background: url("../bilder/3.png");
 }
 .field___4{
-    background-color: blue;
+    background: url("../bilder/4.png");
 }
 .field___5{
-    background-color: yellow;
+      background: url("../bilder/5.png");
 }
-.field___6{}
-.field___7{}
+.field___6{
+  background: url("../bilder/6.png");
+}
+.field___7{
+    background: url("../bilder/7.png");
+}
 .field___8{}
-

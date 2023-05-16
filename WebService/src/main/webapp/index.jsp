@@ -7,6 +7,7 @@
 <body>
 <h1><%= "Hello World!" %></h1>
 <br/>
-<a href="servlet/hello-servlet">Hello Servlet</a>
+<a href="/minesweeper/servlet/getBoard">Goto Board</a><br>
+<a href="/minesweeper/servlet/RST">Reset Board</a><br>
 </body>
 </html>

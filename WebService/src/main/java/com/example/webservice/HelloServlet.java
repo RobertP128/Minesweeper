@@ -12,43 +12,45 @@ import java.io.*;
 public class HelloServlet extends HttpServlet {
     private String message;
 
+    private MainController mainController;
     public HelloServlet(){
         super();
+
+        mainController=new MainController();
+
     }
 
     public void init() {
-        message = "Hello World!";
+        mainController.InitBoard();
     }
+
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("text/html");
-        Application app=new Application();
-        app.maxCols=50;
-        app.maxRows=40;
-        app.init();
-        app.initBombs(150);
-        app.setBombCount();
 
+        String commandPrefix="/command/";
 
-        // Hello
-        PrintWriter out = response.getWriter();
-        out.println("<html><body>");
-        out.println("<h1>" + "Test" + "</h1>");
-        out.println("<table>");
-        for (int y=0;y<app.maxRows;y++){
-            out.println("<tr>");
-            for(int x=0;x<app.maxCols;x++){
-                out.println("<td>");
-                out.println(app.board[x][y].bombCount);
-                out.println("</td>");
-
-            }
-            out.println("</tr>");
+        if (request.getPathInfo().equals("/getBoard")) {
+            var board = mainController.getBoard();
+            new View().renderBoard(response.getWriter(),request.getContextPath(), board, Application.GameStatus.INPUT_OK);
         }
 
-        out.println("</table>");
+        else if (request.getPathInfo().startsWith(commandPrefix)) {
 
-        out.println("</body></html>");
+            String[] parts=request.getPathInfo().split(commandPrefix);
+            if (parts.length>1) {
+                var gamestatus=mainController.command(parts[1]);
+                var board = mainController.getBoard();
+                new View().renderBoard(response.getWriter(),request.getContextPath(), board,gamestatus);
+            }
+        }
+        else if (request.getPathInfo().equals("/RST")) {
+
+                mainController.InitBoard();
+                var board = mainController.getBoard();
+                new View().renderBoard(response.getWriter(),request.getContextPath(), board, Application.GameStatus.INPUT_OK);
+        }
+
     }
 
     public void destroy() {

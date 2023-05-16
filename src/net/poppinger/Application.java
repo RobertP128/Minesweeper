@@ -19,7 +19,7 @@ class Coord{
 
 public class Application {
 
-    private enum GameStatus{
+    public enum GameStatus{
         INPUT_ERROR,
         INPUT_OK,
         PLAYER_LOST
@@ -219,7 +219,7 @@ public class Application {
      * @param command
      * @return boolean true if success
      */
-    private GameStatus commandAuswerten(String command){
+    public GameStatus commandAuswerten(String command){
 
         if (command==null) return GameStatus.INPUT_ERROR;
 

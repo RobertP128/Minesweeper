@@ -2,11 +2,11 @@ package net.poppinger;
 
 public class TileStatus {
 
-    enum Status{
+    public enum Status{
         EMPTY,
         BOMB
     }
-    enum Marker{
+    public enum Marker{
         NOT_MARKED,
         BOMB,
         Free,

@@ -1,0 +1,54 @@
+
+a,a:hover,a:visited{
+    text-decoration: none;
+    font-size: 10px;
+    display:block;
+}
+body{
+    font-size: 10px;
+}
+
+table{
+    margin: 0px;
+    padding: 0px;
+}
+
+td {
+    width: 10px;
+    height: 10px;
+    border: 1px solid grey;
+}
+
+.field____{}
+
+
+.field___X{
+    background-color: grey;
+}
+.field_f_X{
+    background-color: aqua;
+}
+.field_b_X{
+    background-color: magenta;
+}
+
+
+.field___1{
+    background-color: red;
+}
+.field___2{
+    background-color: green;
+}
+.field___3{
+    background-color: black;
+}
+.field___4{
+    background-color: blue;
+}
+.field___5{
+    background-color: yellow;
+}
+.field___6{}
+.field___7{}
+.field___8{}
+

@@ -19,7 +19,8 @@ td {
     border: 1px solid grey;
 }
 td[class*="field_"]{
-    background-size: contain;
+    background-size: cover;
+
 }
 
 .field____{
